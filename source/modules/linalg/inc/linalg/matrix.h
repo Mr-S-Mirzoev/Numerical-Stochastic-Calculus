@@ -16,6 +16,7 @@ namespace linalg
 
         Matrix(Eigen::MatrixXd const& data);
         Eigen::MatrixXd const& get_data() const;
+        Eigen::MatrixXd& get_data_writable();
 
     public:
         Matrix(int m, int n);
@@ -28,15 +29,19 @@ namespace linalg
         double const& operator()(size_t row_idx, size_t col_idx) const;
         std::pair<int, int> size() const;
 
-        friend Matrix ones(size_t size);
-        friend Matrix zeros(size_t size);
+        friend std::ostream& operator<<(std::ostream& os, const Matrix& m);
+
+        friend Matrix ones(size_t m, size_t n);
+        friend Matrix zeros(size_t m, size_t n);
 
         friend class algorithms;
         friend class ops;
     };
 
-    Matrix ones(size_t size);
-    Matrix zeros(size_t size);
+    std::ostream& operator<<(std::ostream& os, const Matrix& m);
+
+    Matrix ones(size_t m, size_t n);
+    Matrix zeros(size_t m, size_t n);
 } // namespace linalg
 
 // #include "../matrix_impl.h"

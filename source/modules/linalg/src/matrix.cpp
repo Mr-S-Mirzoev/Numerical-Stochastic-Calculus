@@ -16,6 +16,11 @@ Eigen::MatrixXd const& Matrix::get_data() const
     return data_;
 }
 
+Eigen::MatrixXd& Matrix::get_data_writable()
+{
+    return data_;
+}
+
 Matrix Matrix::T() const
 {
     Eigen::MatrixXd data_T = data_.transpose();
@@ -47,13 +52,19 @@ std::pair<int, int> Matrix::size() const
     return {data_.rows(), data_.cols()};
 }
 
-Matrix ones(size_t size)
+Matrix ones(size_t m, size_t n)
 {
-    return Matrix(Eigen::MatrixXd::Identity(size, size));
+    return Matrix(Eigen::MatrixXd::Identity(m, n));
 }
 
-Matrix zeros(size_t size)
+Matrix zeros(size_t m, size_t n)
 {
-    return Matrix(Eigen::MatrixXd::Zero(size, size));
+    return Matrix(Eigen::MatrixXd::Zero(m, n));
+}
+
+std::ostream& operator<<(std::ostream& os, const Matrix& m)
+{
+    os << m.data_;
+    return os;
 }
 } // namespace linalg
