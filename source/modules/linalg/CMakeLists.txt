@@ -3,15 +3,12 @@ project(${MODULE_LINALG_NAME} VERSION 1.0.1 DESCRIPTION "Linear algebra library"
 
 # [BEGIN] EIGEN Library setup
 # important setting for accessing the eigen library
-list(APPEND CMAKE_MODULE_PATH "${NUM_STOCH_CALC_ROOT}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${NUM_STOCH_CALC_ROOT}/cmake/eigen")
+message("CMake module path: ${CMAKE_MODULE_PATH}")
+
 find_package(Eigen3 REQUIRED)
 
 set(EIGEN3_INCLUDE_DIR "${NUM_STOCH_CALC_ROOT}/install/eigen/include/eigen3" )
-if(NOT EIGEN3_INCLUDE_DIR)
-    message(FATAL_ERROR "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
-endif()
-
-message("CMake module path: ${CMAKE_MODULE_PATH}")
 message("Eigen include path: ${EIGEN3_INCLUDE_DIR}")
 
 # [END] EIGEN Library setup

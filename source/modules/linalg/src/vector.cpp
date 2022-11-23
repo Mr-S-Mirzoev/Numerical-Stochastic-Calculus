@@ -1,5 +1,7 @@
 #include "linalg/vector.h"
 
+#include <vector>
+
 namespace linalg
 {
 Vector::Vector(int n): data_(n)
@@ -38,6 +40,14 @@ double const& Vector::operator()(size_t idx) const
 int Vector::size() const
 {
     return data_.size();
+}
+
+std::vector<double> Vector::as_std_vector() const
+{
+    std::vector<double> copy(size());
+    Eigen::VectorXd::Map(&copy[0], size()) = data_;
+
+    return copy;
 }
 
 Vector ones(size_t n)

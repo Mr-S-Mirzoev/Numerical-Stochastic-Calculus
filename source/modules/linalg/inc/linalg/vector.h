@@ -25,6 +25,7 @@ namespace linalg
         double const& operator()(size_t idx) const;
 
         int size() const;
+        std::vector<double> as_std_vector() const;
 
         friend std::ostream& operator<<(std::ostream& os, const Vector& v);
 
