@@ -20,8 +20,10 @@ namespace linalg
     public:
         Vector(int n);
 
+        double mean() const;
         double& operator()(size_t idx);
         double const& operator()(size_t idx) const;
+
         int size() const;
 
         friend std::ostream& operator<<(std::ostream& os, const Vector& v);

@@ -3,13 +3,41 @@
 #include "linalg/matrix.h"
 #include "linalg/vector.h"
 
-namespace rnd
+#include <random>
+
+class rnd
 {
-    linalg::Vector randn(size_t size, double mu, double sigma);
+    static std::random_device device_random_;
+public:
+    /**
+     * returns if seeds are trully random
+     * i.e. utilises random number generating
+     * device, not pseudo-random number generator
+    */
+    static bool is_true_random();
 
-    linalg::Vector randn_std(size_t size);
+    /**
+     * returns a trully random seed, if possible
+    */
+    static int get_random_seed();
 
-    linalg::Matrix randn(size_t size, linalg::Matrix const& Q);
+    /**
+     * n-sized normal distribution with parameters (mu, sigma)
+    */
+    static linalg::Vector randn(size_t size, double mu, double sigma);
 
-    linalg::Matrix randn_std_mat(size_t size);
-} // namespace rand
+    /**
+     * n-sized standard normal distribution
+    */
+    static linalg::Vector randn_std(size_t size);
+
+    /**
+     * \f$N_{v, Q}\f$ -distributed r.v.
+    */
+    static linalg::Matrix randn(size_t size, linalg::Vector const& v, linalg::Matrix const& Q);
+
+    /**
+     * n-sized poisson distribution with parameter (mu)
+    */
+    static linalg::Vector poisson(size_t size, double mean);
+}; // class rnd

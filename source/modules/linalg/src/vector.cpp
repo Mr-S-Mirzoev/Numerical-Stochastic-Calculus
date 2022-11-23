@@ -20,6 +20,11 @@ Eigen::VectorXd& Vector::get_data_writable()
     return data_;
 }
 
+double Vector::mean() const
+{
+    return data_.mean();
+}
+
 double& Vector::operator()(size_t idx)
 {
     return data_[idx];
