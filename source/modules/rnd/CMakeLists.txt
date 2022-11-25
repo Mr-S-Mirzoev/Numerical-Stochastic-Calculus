@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 project(${MODULE_RAND_NAME} VERSION 1.0.1 DESCRIPTION "Pseudo-random numbers library")
 
 add_library(${MODULE_RAND_NAME} SHARED
+    ${MODULE_RAND_DIR}/src/bm.cpp
     ${MODULE_RAND_DIR}/src/random.cpp
 )
 

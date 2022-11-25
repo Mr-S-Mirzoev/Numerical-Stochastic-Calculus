@@ -19,7 +19,7 @@ namespace linalg
         Eigen::MatrixXd& get_data_writable();
 
     public:
-        Matrix(int m, int n);
+        Matrix(int m = 0, int n = 0);
 
         Matrix T() const;
 

@@ -1,4 +1,5 @@
 #include "linalg/vector.h"
+#include "linalg/spline.h"
 
 #include <vector>
 
@@ -50,6 +51,19 @@ std::vector<double> Vector::as_std_vector() const
     return copy;
 }
 
+Vector Vector::cumsum(bool start_with_zero) const
+{
+    std::size_t end = size();
+    std::size_t begin = start_with_zero ? 1 : 0;
+
+    // TODO: check that sz is not 0;
+    Vector out(begin + end);
+    for (auto i = begin; i < end; ++i)
+        out(i) += data_(i - begin);
+
+    return out;
+}
+
 Vector ones(size_t n)
 {
     return Vector(Eigen::MatrixXd::Identity(n, 1));
@@ -58,6 +72,23 @@ Vector ones(size_t n)
 Vector zeros(size_t n)
 {
     return Vector(Eigen::MatrixXd::Zero(n, 1));
+}
+
+Vector range(double begin, double end, std::size_t size)
+{
+    return Vector{Eigen::VectorXd::LinSpaced(size, begin, end)};
+}
+
+Vector interp(Vector const& xvals, Vector const& yvals, Vector const& x)
+{
+    numeric::SplineFunction s(xvals, yvals);
+    return s(x);
+}
+
+double interp(Vector const& xvals, Vector const& yvals, double x)
+{
+    numeric::SplineFunction s(xvals, yvals);
+    return s(x);
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& v)
