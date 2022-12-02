@@ -2,34 +2,17 @@
 
 SCRIPT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
-if [ ! -d "${SCRIPT_DIR}/install/eigen" ]; then
-    # Take action if install $DIR does not exists. #
-    echo "Installing Eigen library in ${SCRIPT_DIR}/install/eigen..."
-    mkdir -p ${SCRIPT_DIR}/build/eigen
-    mkdir -p ${SCRIPT_DIR}/install/eigen
-    mkdir -p ${SCRIPT_DIR}/cmake/eigen
+eigen_generate_project() {
+    cmake ${SCRIPT_DIR}/deps/eigen                         \
+        -DCMAKE_INSTALL_PREFIX=${SCRIPT_DIR}/install/eigen \
+        -B ${SCRIPT_DIR}/build/eigen
+}
 
-    cmake ${SCRIPT_DIR}/deps/eigen                           \
-          -DCMAKE_INSTALL_PREFIX=${SCRIPT_DIR}/install/eigen \
-          -B ${SCRIPT_DIR}/build/eigen
-
-    make -C build/eigen install -j 4
-
-    mkdir -p cmake
+eigen_post_install_command() {
     cp ${SCRIPT_DIR}/install/eigen/share/eigen3/cmake/* ${SCRIPT_DIR}/cmake/eigen
+}
 
-    echo "Eigen library installation complete"
-else
-    echo "Eigen library already installed, skipping installation"
-fi
-
-if [ ! -d "${SCRIPT_DIR}/install/matplotpp" ]; then
-    # Take action if install $DIR does not exists. #
-    echo "Installing Matplot++ library in ${SCRIPT_DIR}/install/matplotpp..."
-    mkdir -p ${SCRIPT_DIR}/build/matplotpp
-    mkdir -p ${SCRIPT_DIR}/install/matplotpp
-    mkdir -p ${SCRIPT_DIR}/cmake/matplotpp
-
+mpp_generate_project() {
     cmake ${SCRIPT_DIR}/deps/matplotplusplus  \
         -B ${SCRIPT_DIR}/build/matplotpp      \
         -DBUILD_EXAMPLES=OFF                  \
@@ -38,11 +21,43 @@ if [ ! -d "${SCRIPT_DIR}/install/matplotpp" ]; then
         -DCMAKE_BUILD_TYPE=Release            \
         -DCMAKE_INSTALL_PREFIX="${SCRIPT_DIR}/install/matplotpp" \
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+}
 
-    cmake --build build/matplotpp -j 4
-    cmake --install build/matplotpp
+# Public: Run commands to build dependencies.
+#
+# Takes four arguments:
+#
+# $1 - Name of the dependency (name in deps where it's source codes are downloaded).
+# $2 - Name of the dependency for debug printing.
+# $3 - Cmake project setup function
+# $4 - Custom post-build command. (Usually some installation rootine)
+#
+# Examples
+#
+#   build_dep eigen Eigen eigen_generate_project eigen_post_install_command
+#
+# Returns nothing
+build_dep () {
+    if [ ! -d "${SCRIPT_DIR}/install/$1" ]; then
+        # Take action if install $DIR does not exists. #
+        echo "Installing $2 library in ${SCRIPT_DIR}/install/$1..."
+        mkdir -p ${SCRIPT_DIR}/build/$1
+        mkdir -p ${SCRIPT_DIR}/install/$1
+        mkdir -p ${SCRIPT_DIR}/cmake/$1
 
-    echo "Matplot++ library installation complete"
-else
-    echo "Matplot++ library already installed, skipping installation"
-fi
+        $3;
+
+        cmake --build build/$1 -j 8
+        cmake --install build/$1
+
+        mkdir -p cmake
+        $4;
+
+        echo "$2 library installation complete"
+    else
+        echo "$2 library already installed, skipping installation"
+    fi
+}
+
+build_dep eigen Eigen eigen_generate_project eigen_post_install_command
+build_dep matplotpp "Matplot++" mpp_generate_project

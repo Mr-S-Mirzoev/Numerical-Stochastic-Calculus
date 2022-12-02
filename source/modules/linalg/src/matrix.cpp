@@ -27,16 +27,6 @@ Matrix Matrix::T() const
     return data_T;
 }
 
-// Vector& Matrix::operator()(size_t row_idx)
-// {
-//     return data_[row_idx];
-// }
-
-// Vector<Type> const& Matrix::operator()(size_t row_idx) const
-// {
-//     return data_[row_idx];
-// }
-
 double& Matrix::operator()(size_t row_idx,  size_t col_idx)
 {
     return data_(row_idx, col_idx);
@@ -66,5 +56,45 @@ std::ostream& operator<<(std::ostream& os, const Matrix& m)
 {
     os << m.data_;
     return os;
+}
+
+#define M_ASSIGNMENT_OPERATOR_IMPL(op, rhs_type)    \
+Matrix& Matrix::operator op(rhs_type const& rhs)    \
+{                                                   \
+    get_data_writable() op rhs.get_data();          \
+    return *this;                                   \
+}
+
+#define M_OPERATOR_IMPL(op, rhs_type)                    \
+Matrix Matrix::operator op(rhs_type const& rhs) const    \
+{                                                        \
+    Matrix copy{*this};                                  \
+    return (copy op##= rhs);                             \
+}
+
+M_ASSIGNMENT_OPERATOR_IMPL(+=, Matrix);
+M_ASSIGNMENT_OPERATOR_IMPL(+=, Vector);
+M_ASSIGNMENT_OPERATOR_IMPL(-=, Matrix);
+M_ASSIGNMENT_OPERATOR_IMPL(-=, Vector);
+M_ASSIGNMENT_OPERATOR_IMPL(*=, Matrix);
+M_ASSIGNMENT_OPERATOR_IMPL(*=, Vector);
+
+M_OPERATOR_IMPL(+, Matrix);
+M_OPERATOR_IMPL(+, Vector);
+M_OPERATOR_IMPL(-, Matrix);
+M_OPERATOR_IMPL(-, Vector);
+M_OPERATOR_IMPL(*, Matrix);
+M_OPERATOR_IMPL(*, Vector);
+
+Matrix& Matrix::operator*=(double const& scalar)
+{
+    get_data_writable() *= scalar;
+    return *this;
+}
+
+Matrix Matrix::operator*(double const& rhs) const
+{
+    Matrix copy{*this};
+    return (copy *= rhs);
 }
 } // namespace linalg

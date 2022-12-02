@@ -1,4 +1,3 @@
-#include "linalg/ops.h"
 #include "linalg/matrix.h"
 
 #include "plotter/plotter.h"
@@ -9,8 +8,6 @@
 
 int main(int argc, char const *argv[])
 {
-    using _op = linalg::ops;
-
     // Script to plot (approximate) paths of Brownian motions
     // Initializing simulation parameters and empty matrices
     double T = 1;

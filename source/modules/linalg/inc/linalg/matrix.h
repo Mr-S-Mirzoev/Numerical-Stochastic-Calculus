@@ -2,12 +2,15 @@
 
 #include <Eigen/Core>
 
+#define M_ASSIGNMENT_OPERATOR_DEF(op, rhs_type) Matrix& operator op(rhs_type const& rhs);
+#define M_OPERATOR_DEF(op, rhs_type) Matrix operator op(rhs_type const& rhs) const;
+
 namespace linalg
 {
     class Vector;
 
     class algorithms;
-    class ops;
+    class Vector;
 
     class Matrix
     {
@@ -29,13 +32,35 @@ namespace linalg
         double const& operator()(size_t row_idx, size_t col_idx) const;
         std::pair<int, int> size() const;
 
+        // Arithmetical operations
+
+        M_ASSIGNMENT_OPERATOR_DEF(+=, Matrix);
+        M_ASSIGNMENT_OPERATOR_DEF(+=, Vector);
+        M_ASSIGNMENT_OPERATOR_DEF(-=, Matrix);
+        M_ASSIGNMENT_OPERATOR_DEF(-=, Vector);
+        M_ASSIGNMENT_OPERATOR_DEF(*=, Matrix);
+        M_ASSIGNMENT_OPERATOR_DEF(*=, Vector);
+        M_ASSIGNMENT_OPERATOR_DEF(*=, double);
+
+        M_OPERATOR_DEF(+, Matrix);
+        M_OPERATOR_DEF(+, Vector);
+        M_OPERATOR_DEF(-, Matrix);
+        M_OPERATOR_DEF(-, Vector);
+        M_OPERATOR_DEF(*, Matrix);
+        M_OPERATOR_DEF(*, Vector);
+        M_OPERATOR_DEF(*, double);
+
+        // Output operator
+
         friend std::ostream& operator<<(std::ostream& os, const Matrix& m);
+
+        // Special constructors
 
         friend Matrix ones(size_t m, size_t n);
         friend Matrix zeros(size_t m, size_t n);
 
+        friend class Vector;
         friend class algorithms;
-        friend class ops;
     };
 
     std::ostream& operator<<(std::ostream& os, const Matrix& m);
@@ -43,5 +68,3 @@ namespace linalg
     Matrix ones(size_t m, size_t n);
     Matrix zeros(size_t m, size_t n);
 } // namespace linalg
-
-// #include "../matrix_impl.h"

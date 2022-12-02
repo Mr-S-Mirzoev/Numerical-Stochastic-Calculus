@@ -1,3 +1,4 @@
+#include "linalg/matrix.h"
 #include "linalg/vector.h"
 #include "linalg/spline.h"
 
@@ -51,6 +52,11 @@ std::vector<double> Vector::as_std_vector() const
     return copy;
 }
 
+Matrix Vector::as_mat() const
+{
+    return Matrix{get_data()};
+}
+
 Vector Vector::cumsum(bool start_with_zero) const
 {
     std::size_t end = size();
@@ -96,4 +102,70 @@ std::ostream& operator<<(std::ostream& os, const Vector& v)
     os << v.data_;
     return os;
 }
+
+#define V_ASSIGNMENT_OPERATOR_IMPL(op, rhs_type)    \
+Vector& Vector::operator op(rhs_type const& rhs)    \
+{                                                   \
+    get_data_writable() op rhs.get_data();          \
+    return *this;                                   \
+}
+
+#define V_OPERATOR_IMPL(op, rhs_type)                    \
+Vector Vector::operator op(rhs_type const& rhs) const    \
+{                                                        \
+    Vector copy{*this};                                  \
+    return (copy op##= rhs);                             \
+}
+
+V_ASSIGNMENT_OPERATOR_IMPL(+=, Vector);
+V_ASSIGNMENT_OPERATOR_IMPL(-=, Vector);
+
+V_OPERATOR_IMPL(+, Vector);
+V_OPERATOR_IMPL(-, Vector);
+
+Vector& Vector::operator*=(double const& scalar)
+{
+    get_data_writable() *= scalar;
+    return *this;
+}
+
+Vector& Vector::operator/=(double const& scalar)
+{
+    return *this *= 1. / scalar;
+}
+
+Vector Vector::operator*(double const& scalar) const
+{
+    Vector copy {*this};
+    return copy *= scalar;
+}
+
+Vector Vector::operator/(double const& scalar) const
+{
+    Vector copy {*this};
+    return copy /= scalar;
+}
+
+namespace vector_utils
+{
+Vector cmul(Vector const& lhs, Vector const& rhs)
+{
+    return Vector{lhs.get_data().cwiseProduct(rhs.get_data())};
+}
+
+Vector floor(Vector const& v)
+{
+    return Vector{v.get_data().unaryExpr([](double x) { return ::floor(x); })};
+}
+
+Vector ceil(Vector const& v)
+{
+    return Vector{v.get_data().unaryExpr([](double x) { return ::ceil(x); })};
+}
+
+Vector sqrt(Vector const& v)
+{
+    return Vector{v.get_data().cwiseSqrt()};
+}
+} // namespace vector_utils
 } // namespace linalg

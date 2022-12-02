@@ -16,7 +16,6 @@ message("Eigen include path: ${EIGEN3_INCLUDE_DIR}")
 add_library(${MODULE_LINALG_NAME} SHARED
     ${MODULE_LINALG_DIR}/src/algorithms.cpp
     ${MODULE_LINALG_DIR}/src/matrix.cpp
-    ${MODULE_LINALG_DIR}/src/ops.cpp
     ${MODULE_LINALG_DIR}/src/spline.cpp
     ${MODULE_LINALG_DIR}/src/vector.cpp
 )

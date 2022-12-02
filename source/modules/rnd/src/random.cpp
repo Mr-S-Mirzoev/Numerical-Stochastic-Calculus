@@ -1,7 +1,6 @@
 #include "rnd/random.h"
 
 #include "linalg/algorithms.h"
-#include "linalg/ops.h"
 
 std::random_device rnd::device_random_{};
 
@@ -44,7 +43,6 @@ linalg::Matrix rnd::randn(size_t size, linalg::Vector const& v, linalg::Matrix c
      * \f$X : \Omega \to R^m\f$ be an \f$N_{\nu,Q}\f$ - distributed random variable. Then the random variable
      * \f$ (\omega \in \Omega) \to  A X(ω) + b \in R^d\f$ is \f$N_{A v + b, A Q A^{T}}\f$ -distributed.
     */
-    using _op = linalg::ops;
 
     // The idea is to apply affine linear transform to N standard normal r.v.s which
     // are by definition a n-dimensional standard normal random variable.
@@ -57,7 +55,7 @@ linalg::Matrix rnd::randn(size_t size, linalg::Vector const& v, linalg::Matrix c
 
     // Transform to general two-dimensional standard normal random variables
     auto const& A = linalg::algorithms::cholesky(Q).T();
-    return _op::sum(v, _op::mul(A, x));
+    return A * x + v;
 }
 
 linalg::Vector rnd::poisson(size_t size, double mean)
