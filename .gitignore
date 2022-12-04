@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Build dir
+build
+
+# Install dir
+install
+cmake
+
+# MacOS specific
+*.DS_Store
+
+# VSCode specific
+*.vscode
