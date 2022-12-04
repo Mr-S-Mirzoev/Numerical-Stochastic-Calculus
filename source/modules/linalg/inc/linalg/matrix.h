@@ -26,9 +26,7 @@ namespace linalg
 
         Matrix T() const;
 
-        // Vector& operator()(size_t row_idx);
         double& operator()(size_t row_idx, size_t col_idx);
-        // Vector const& operator()(size_t row_idx) const;
         double const& operator()(size_t row_idx, size_t col_idx) const;
         std::pair<int, int> size() const;
 

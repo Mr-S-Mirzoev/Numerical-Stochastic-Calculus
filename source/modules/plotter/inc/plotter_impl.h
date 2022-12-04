@@ -9,18 +9,6 @@ void plotter::show_plot(plotter::plot_details const& config, Types const&... arg
 
     auto p = plot((args.as_std_vector(), ...));
 
-    // if (config.Legend.has_value())
-    // {
-    //     auto &v = config.Legend.value();
-    //     for (int i = 0; i < nargs; ++i)
-    //         p[i].legend_string(v[i]);
-    // }
-
-    // if (config.LineWIdth.has_value())
-    // {
-    //     line_width(config.LineWIdth.value());
-    // }
-
     if (config.Title.has_value())
     {
         title(config.Title.value());

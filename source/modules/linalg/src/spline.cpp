@@ -30,7 +30,6 @@ Vector SplineFunction::operator()(Vector const& x) const
     return Vector{x.get_data().unaryExpr([this](double x) { return this->operator()(x); })};
 }
 
-// Helpers to scale X values down to [0, 1]
 double SplineFunction::scaled_value(double x) const
 {
     return (x - x_min) / (x_max - x_min);

@@ -29,15 +29,15 @@ int main(int argc, char const *argv[])
 
     plotter::plot_details config;
     config.LineWIdth = 1.5;
-    config.XLabel = "$t$";
-    config.YLabel = "$\\widetilde{W}$";
+    config.XLabel = "t";
+    config.YLabel = "W_inc";
     config.Legend = std::vector<std::string>(N.size());
     for (int i{0}; i < N.size(); ++i)
-        config.Legend.value()[i] = "$N = " + std::to_string(N[i]) + "$";
+        config.Legend.value()[i] = "N = " + std::to_string(N[i]);
     config.Title = "Approximate paths of a Brownian motion";
     plotter::show_plot(config, t, WInt[0], t, WInt[1], t, WInt[2]);
 
-    config.YLabel = "$W$";
+    config.YLabel = "W";
     config.Title = "Exact paths of a Brownian motion";
     plotter::show_plot(config, t, W[0], t, W[1], t, W[2]);
 
